@@ -6,22 +6,21 @@
 def minOperations(n):
     """Computes the fewest number of operations needed to result
     in exactly n H characters.
+    args: Number of characters to be displayed
+    return: number of minimum operations
     """
     if not isinstance(n, int):
         return 0
-    opr_count = 0
-    clipboard = 0
-    done = 1
-    while done < n:
-        if clipboard == 0:
-            clipboard = done
-            done += clipboard
-            opr_count += 2
-        elif n - done > 0 and (n - done) % done == 0:
-            clipboard = done
-            done += clipboard
-            opr_count += 2
-        elif clipboard > 0:
-            done += clipboard
-            opr_count += 1
-    return opr_count
+    now = 1
+    start = 0
+    counter = 0
+    while now < n:
+        remainder = n - now
+        if remainder % now == 0:
+            start = now
+            now += start
+            counter += 2
+        else:
+            now += start
+            counter += 1
+    return counter
