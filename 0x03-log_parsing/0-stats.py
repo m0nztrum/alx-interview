@@ -16,6 +16,8 @@ def print_data(file_size, status_codes):
 def main():
     """main function"""
     file_size = 0
+
+    # some status codes
     status_codes = {
         "200": 0,
         "301": 0,
@@ -42,6 +44,8 @@ def main():
                 \s(\d+)
             """
             res = re.search(pattern, line, re.X)
+
+            # fix
             code, size = res.groups()
             if code in status_codes:
                 file_size += int(size)
