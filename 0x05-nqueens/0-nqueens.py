@@ -57,6 +57,7 @@ def solution_format(positions):
 
 
 def nqueens():
+    """entry point"""
     N = init()
 
     # Finding all solutions
