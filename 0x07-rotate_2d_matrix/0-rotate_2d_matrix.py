@@ -12,4 +12,4 @@ def rotate_2d_matrix(matrix):
 
     # reverse rows
     for i in range(n):
-        matrix[i].reverse()
+        matrix[i] = matrix[i][::-1]
