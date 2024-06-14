@@ -14,10 +14,10 @@ def island_perimeter(grid):
     rows = len(grid)
     cols = len(grid[0])
 
-    """Loop through each cell in the grid"""
+    # Loop through each cell in the grid
     for row in range(rows):
         for col in range(cols):
-            """check all four sides"""
+            # check all four sides
             if grid[row][col] == 1:
                 if row == 0 or grid[row - 1][col] == 0:
                     perimeter += 1
