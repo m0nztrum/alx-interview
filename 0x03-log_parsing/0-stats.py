@@ -1,53 +1,58 @@
 #!/usr/bin/python3
-import signal
+"""Module reads from standard input and computes metrics"""
+
 import sys
 
 
-def signal_handler(sig, frame):
-    """Signal handler for SIGINT"""
-    print_stats()
-    sys.exit(0)
+def process_input(line, cache, total_size, counter):
+    """Process input line and update cache and total size"""
+    line_list = line.split(" ")
+    if len(line_list) > 4:
+        code = line_list[-2]
+        size = int(line_list[-1])
+        if code in cache:
+            cache[code] += 1
+        total_size += size
+        counter += 1
+    return total_size, counter
 
 
-def print_stats():
-    """Prints the stats"""
-    print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
+def print_statistics(cache, total_size):
+    """Print statistics"""
+    print("File size:", total_size)
+    for key, value in sorted(cache.items()):
+        if value != 0:
+            print("{}: {}".format(key, value))
 
 
-# some possible status codes
-status_codes = {
-    "200": 0,
-    "301": 0,
-    "400": 0,
-    "401": 0,
-    "403": 0,
-    "404": 0,
-    "405": 0,
-    "500": 0,
-}
-total_size = 0
-line_count = 0
+def main():
+    """Main function to read from standard input and compute metrics"""
+    cache = {
+        "200": 0,
+        "301": 0,
+        "400": 0,
+        "401": 0,
+        "403": 0,
+        "404": 0,
+        "405": 0,
+        "500": 0,
+    }
+    total_size = 0
+    counter = 0
 
-signal.signal(signal.SIGINT, signal_handler)
+    try:
+        for line in sys.stdin:
+            total_size, counter = process_input(line, cache, total_size, counter)
+            if counter == 10:
+                counter = 0
+                print_statistics(cache, total_size)
 
-try:
-    for line in sys.stdin:
-        try:
-            data = line.split()
-            size = int(data[-1])
-            status_code = data[-2]
-            if status_code in status_codes:
-                status_codes[status_code] += 1
-            total_size += size
-        except Exception:
-            pass
-        line_count += 1
-        if line_count % 10 == 0:
-            print_stats()
-except KeyboardInterrupt:
-    print_stats()
-    raise
-print_stats()
+    except KeyboardInterrupt:
+        pass
+
+    finally:
+        print_statistics(cache, total_size)
+
+
+if __name__ == "__main__":
+    main()
